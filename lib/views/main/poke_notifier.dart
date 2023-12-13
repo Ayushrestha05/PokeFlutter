@@ -1,7 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poke_flutter/models/poke_model.dart';
 import 'package:poke_flutter/services/api_services.dart';
-import 'package:poke_flutter/views/main/main_view.dart';
 import 'package:poke_flutter/views/main/poke_data_state.dart';
 
 class PokeNotifier extends Notifier<PokeDataState> {
@@ -26,8 +27,9 @@ class PokeNotifier extends Notifier<PokeDataState> {
   }
 
   void filterPokeData(String query) async {
+    log('Query: $query');
     if (query.isNotEmpty) {
-      final List<PokeModel> pokeData = state.pokemons!
+      final List<PokeModel> pokeData = pokeDataInit
           .where((poke) => poke.name.toLowerCase().contains(query))
           .toList();
       state = PokeDataState(status: PokeDataStatus.loaded, pokemons: pokeData);

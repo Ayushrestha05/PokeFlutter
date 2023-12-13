@@ -17,8 +17,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'User Data',
       theme: ThemeData(
+        scaffoldBackgroundColor: Color(0xFF0e4e8b),
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
+        fontFamily: 'PKMN',
+        textTheme: TextTheme(
+          bodyMedium: TextStyle(color: Colors.white),
+        ),
       ),
       home: MyHomePage(),
     );

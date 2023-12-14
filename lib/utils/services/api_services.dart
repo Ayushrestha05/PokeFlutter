@@ -5,7 +5,7 @@ import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'package:poke_flutter/models/poke_detail_model.dart';
 import 'package:poke_flutter/models/poke_model.dart';
-import 'package:poke_flutter/services/api_response_cache_box.dart';
+import 'package:poke_flutter/utils/services/api_response_cache_box.dart';
 
 class APIService {
   String endpoint = 'https://pokeapi.co/api/v2/';
@@ -48,7 +48,8 @@ class APIService {
       log('Return All Pokemon Network Data');
       return pokeData;
     } else {
-      throw Exception(response.reasonPhrase);
+      log(response.reasonPhrase.toString());
+      return [];
     }
   }
 
@@ -59,20 +60,34 @@ class APIService {
       (response) => response!.url == '${endpoint}pokemon/$pokeID',
       orElse: () => null,
     );
-    log('Cached Response: ${cachedResponse}');
     if (cachedResponse != null &&
         ((DateTime.now().millisecondsSinceEpoch - cachedResponse.timestamp) <
             _cacheTimeout)) {
       return PokeDetailModel.fromJson(jsonDecode(cachedResponse.response));
     }
     var response = await http.get(Uri.parse('${endpoint}pokemon/$pokeID'));
+    log('API : ${endpoint}pokemon/$pokeID');
+    log('Respnse Code : ${response.statusCode}');
     if (response.statusCode == 200) {
       saveAPICacheData(
           endpoint: '${endpoint}pokemon/$pokeID', response: response);
       log('Returned Network Data (Pokemon Detail)');
       return PokeDetailModel.fromJson(jsonDecode(response.body));
     } else {
-      throw Exception(response.reasonPhrase);
+      log(response.reasonPhrase.toString());
+      // Return empty object
+      return PokeDetailModel(
+          id: '0',
+          name: '',
+          baseExp: '',
+          height: '',
+          order: '',
+          weight: '',
+          abilities: [],
+          forms: [],
+          sprites: {},
+          stats: [],
+          types: []);
     }
   }
 

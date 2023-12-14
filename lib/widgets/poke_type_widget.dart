@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:poke_flutter/extensions/string_extension.dart';
+import 'package:poke_flutter/utils/extensions/string_extension.dart';
 
-Widget pokeTypeSmall(String type) {
+Widget pokeTypeWidget({required String type, bool? isSmall = true}) {
   return Container(
     decoration: BoxDecoration(
       color: setTypeColor(type),
@@ -11,7 +11,7 @@ Widget pokeTypeSmall(String type) {
       padding: const EdgeInsets.all(4.0),
       child: Center(
         child: Text(
-          type.substring(0, 1).capitalize(),
+          isSmall! ? type.capitalize().substring(0, 1) : type.capitalize(),
           style: TextStyle(
             color: Colors.white,
             fontSize: 8,

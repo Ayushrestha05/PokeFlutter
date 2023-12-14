@@ -2,10 +2,11 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:poke_flutter/extensions/string_extension.dart';
-import 'package:poke_flutter/services/api_services.dart';
+import 'package:poke_flutter/utils/extensions/string_extension.dart';
+import 'package:poke_flutter/utils/services/api_services.dart';
 import 'package:poke_flutter/views/main/poke_data_state.dart';
 import 'package:poke_flutter/views/main/poke_notifier.dart';
+import 'package:poke_flutter/views/poke_detail/poke_detail_notifier.dart';
 import 'package:poke_flutter/views/poke_detail/poke_detail_view.dart';
 import 'package:poke_flutter/views/poke_detail/poke_selected_notifier.dart';
 import 'package:poke_flutter/widgets/poke_type_widget.dart';
@@ -63,15 +64,16 @@ class MyHomePage extends ConsumerWidget {
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
                     return InkWell(
-                      onTap: () {
+                      onTap: () async {
                         final int selectedPokeID = poke.pokemons![index].id;
-                        ref
-                            .read(selectedPokeNotifierProvider.notifier)
-                            .setPokeID(selectedPokeID);
+
+                        await ref.watch(pokeDetailNotifierProvider.notifier)
+                          ..getPokeDetailData(id: selectedPokeID);
+                        log('Provider Update Completed');
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
                           return PokeDetailView(
-                            pokeID: selectedPokeID,
+                            pokemon: poke.pokemons![index],
                           );
                         }));
                       },
@@ -107,8 +109,10 @@ class MyHomePage extends ConsumerWidget {
                                               return Wrap(
                                                 spacing: 3,
                                                 children: snapshot.data!.types!
-                                                    .map<Widget>(
-                                                        (e) => pokeTypeSmall(e))
+                                                    .map<Widget>((e) =>
+                                                        pokeTypeWidget(
+                                                            type: e,
+                                                            isSmall: true))
                                                     .toList(),
                                               );
                                             } else {
@@ -122,10 +126,13 @@ class MyHomePage extends ConsumerWidget {
                               ),
                             ),
                             //TODO Add Placeholder when Error Occurs
-                            Image.network(
-                              'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${poke.pokemons![index].id}.png',
-                              height: 100,
-                              width: 100,
+                            Hero(
+                              tag: 'pokeIMG${poke.pokemons![index].id}',
+                              child: Image.network(
+                                'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${poke.pokemons![index].id}.png',
+                                height: 100,
+                                width: 100,
+                              ),
                             ),
                             Text(
                               poke.pokemons![index].name.capitalize(),

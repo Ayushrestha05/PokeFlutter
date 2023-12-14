@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:poke_flutter/services/api_response_cache_box.dart';
+import 'package:poke_flutter/utils/constants.dart';
+import 'package:poke_flutter/utils/services/api_response_cache_box.dart';
 import 'package:poke_flutter/views/main/main_view.dart';
 
 void main() async {
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'User Data',
       theme: ThemeData(
-        scaffoldBackgroundColor: Color(0xFF0e4e8b),
+        scaffoldBackgroundColor: kPrimaryColor,
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         fontFamily: 'PKMN',

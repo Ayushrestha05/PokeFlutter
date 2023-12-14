@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poke_flutter/models/poke_model.dart';
-import 'package:poke_flutter/services/api_services.dart';
+import 'package:poke_flutter/utils/services/api_services.dart';
 import 'package:poke_flutter/views/main/poke_data_state.dart';
 
 class PokeNotifier extends Notifier<PokeDataState> {

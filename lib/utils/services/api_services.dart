@@ -91,6 +91,57 @@ class APIService {
     }
   }
 
+  Future<String> getPokeFlavorText(int pokeID) async {
+    final box = await Hive.openBox('apiResponses');
+    //returns first element according to the condition or empty object
+    final cachedResponse = box.values.firstWhere(
+      (response) => response!.url == '${endpoint}pokemon-species/$pokeID',
+      orElse: () => null,
+    );
+    if (cachedResponse != null &&
+        ((DateTime.now().millisecondsSinceEpoch - cachedResponse.timestamp) <
+            _cacheTimeout)) {
+      return jsonDecode(cachedResponse.response)['flavor_text_entries'][0]
+          ['flavor_text'];
+    }
+    var response =
+        await http.get(Uri.parse('${endpoint}pokemon-species/$pokeID'));
+    if (response.statusCode == 200) {
+      saveAPICacheData(
+          endpoint: '${endpoint}pokemon-species/$pokeID', response: response);
+      return jsonDecode(response.body)['flavor_text_entries'][0]['flavor_text'];
+    } else {
+      log(response.reasonPhrase.toString());
+      // Return empty object
+      return '';
+    }
+  }
+
+  Future<String> getPokeAbilityDesc(String abilityURL) async {
+    final box = await Hive.openBox('apiResponses');
+    //returns first element according to the condition or empty object
+    final cachedResponse = box.values.firstWhere(
+      (response) => response!.url == abilityURL,
+      orElse: () => null,
+    );
+    if (cachedResponse != null &&
+        ((DateTime.now().millisecondsSinceEpoch - cachedResponse.timestamp) <
+            _cacheTimeout)) {
+      return jsonDecode(cachedResponse.response)['effect_entries'].firstWhere(
+          (element) => element['language']['name'] == 'en')['short_effect'];
+    }
+    var response = await http.get(Uri.parse(abilityURL));
+    if (response.statusCode == 200) {
+      saveAPICacheData(endpoint: abilityURL, response: response);
+      return jsonDecode(response.body)['effect_entries'].firstWhere(
+          (element) => element['language']['name'] == 'en')['short_effect'];
+    } else {
+      log(response.reasonPhrase.toString());
+      // Return empty object
+      return '';
+    }
+  }
+
   void saveAPICacheData(
       {required String endpoint, required http.Response response}) async {
     final box = await Hive.openBox('apiResponses');

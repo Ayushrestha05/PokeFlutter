@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poke_flutter/utils/extensions/string_extension.dart';
@@ -8,7 +7,6 @@ import 'package:poke_flutter/views/main/poke_data_state.dart';
 import 'package:poke_flutter/views/main/poke_notifier.dart';
 import 'package:poke_flutter/views/poke_detail/poke_detail_notifier.dart';
 import 'package:poke_flutter/views/poke_detail/poke_detail_view.dart';
-import 'package:poke_flutter/views/poke_detail/poke_selected_notifier.dart';
 import 'package:poke_flutter/widgets/poke_type_widget.dart';
 
 class MyHomePage extends ConsumerWidget {

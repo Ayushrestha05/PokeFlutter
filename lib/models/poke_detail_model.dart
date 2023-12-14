@@ -32,7 +32,7 @@ class PokeDetailModel {
       height: json['height'].toString(),
       order: json['order'].toString(),
       weight: json['weight'].toString(),
-      abilities: json['abilities'],
+      abilities: json['abilities'].map((e) => PokeAbility.fromJson(e)).toList(),
       forms: json['forms'],
       sprites: json['sprites'],
       stats: json['stats'].map((e) => PokeStats.fromJson(e)).toList(),
@@ -53,6 +53,20 @@ class PokeStats {
       name: json['stat']['name'],
       baseStat: json['base_stat'].toString(),
       effort: json['effort'].toString(),
+    );
+  }
+}
+
+class PokeAbility {
+  final String name;
+  final String url;
+
+  PokeAbility({required this.name, required this.url});
+
+  factory PokeAbility.fromJson(Map<String, dynamic> json) {
+    return PokeAbility(
+      name: json['ability']['name'],
+      url: json['ability']['url'],
     );
   }
 }

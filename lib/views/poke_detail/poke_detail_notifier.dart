@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poke_flutter/models/poke_detail_model.dart';
 import 'package:poke_flutter/utils/services/api_services.dart';
 import 'package:poke_flutter/views/poke_detail/poke_detail_state.dart';
-import 'package:poke_flutter/views/poke_detail/poke_selected_notifier.dart';
 
 class PokeDetailNotifier extends Notifier<PokeDetailState> {
   PokeDetailNotifier() : super();

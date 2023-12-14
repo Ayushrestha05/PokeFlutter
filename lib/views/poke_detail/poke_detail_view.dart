@@ -6,6 +6,9 @@ import 'package:poke_flutter/utils/extensions/string_extension.dart';
 import 'package:poke_flutter/models/poke_model.dart';
 import 'package:poke_flutter/views/poke_detail/poke_detail_notifier.dart';
 import 'package:poke_flutter/views/poke_detail/poke_detail_state.dart';
+import 'package:poke_flutter/views/poke_detail/widgets/poke_ability_view.dart';
+import 'package:poke_flutter/views/poke_detail/widgets/poke_about_view.dart';
+import 'package:poke_flutter/views/poke_detail/widgets/poke_sprite_view.dart';
 import 'package:poke_flutter/views/poke_detail/widgets/poke_stats_view.dart';
 import 'package:poke_flutter/widgets/poke_type_widget.dart';
 
@@ -48,8 +51,8 @@ class _PokeDetailViewState extends ConsumerState<PokeDetailView> {
                     tag: 'pokeIMG${widget.pokemon.id}',
                     child: Image.network(
                       'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${widget.pokemon.id}.png',
-                      height: 100,
-                      width: 100,
+                      // height: 100,
+                      // width: 100,
                     ),
                   ),
                   Text(
@@ -80,18 +83,25 @@ class _PokeDetailViewState extends ConsumerState<PokeDetailView> {
             // More info container
             Expanded(
                 child: DefaultTabController(
-              length: 2,
+              length: 4,
               child: Container(
                 color: Colors.white,
                 child: Column(
                   children: [
                     TabBar(
+                      isScrollable: true,
                       tabs: [
                         Tab(
                           text: 'About',
                         ),
                         Tab(
                           text: 'Stats',
+                        ),
+                        Tab(
+                          text: 'Sprites',
+                        ),
+                        Tab(
+                          text: 'Abilities',
                         ),
                       ],
                       indicator: BoxDecoration(
@@ -108,10 +118,16 @@ class _PokeDetailViewState extends ConsumerState<PokeDetailView> {
                     ),
                     Expanded(
                         child: TabBarView(children: [
-                      Container(
-                        color: Colors.red,
+                      PokeAboutView(
+                        detail: pokeDetail.detail,
                       ),
                       PokeDetailStatsView(
+                        detail: pokeDetail.detail,
+                      ),
+                      PokeSpriteView(
+                        detail: pokeDetail.detail,
+                      ),
+                      PokeAbilityView(
                         detail: pokeDetail.detail,
                       )
                     ])),

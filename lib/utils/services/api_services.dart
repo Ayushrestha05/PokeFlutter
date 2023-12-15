@@ -31,7 +31,6 @@ class APIService {
       for (var i = 0; i < result.length; i++) {
         pokeData.add(PokeModel.fromJson(result[i], id: i + 1));
       }
-      log('Returned Cache Data');
       return pokeData;
     }
 
@@ -47,10 +46,8 @@ class APIService {
       for (var i = 0; i < result.length; i++) {
         pokeData.add(PokeModel.fromJson(result[i], id: i + 1));
       }
-      log('Return All Pokemon Network Data');
       return pokeData;
     } else {
-      log(response.reasonPhrase.toString());
       return [];
     }
   }
@@ -68,16 +65,11 @@ class APIService {
       return PokeDetailModel.fromJson(jsonDecode(cachedResponse.response));
     }
     var response = await http.get(Uri.parse('${endpoint}pokemon/$pokeID'));
-    log('API : ${endpoint}pokemon/$pokeID');
-    log('Respnse Code : ${response.statusCode}');
     if (response.statusCode == 200) {
       saveAPICacheData(
           endpoint: '${endpoint}pokemon/$pokeID', response: response);
-      log('Returned Network Data (Pokemon Detail)');
       return PokeDetailModel.fromJson(jsonDecode(response.body));
     } else {
-      log(response.reasonPhrase.toString());
-      // Return empty object
       return PokeDetailModel(
           id: '0',
           name: '',
@@ -114,7 +106,6 @@ class APIService {
           endpoint: '${endpoint}pokemon-species/$pokeID', response: response);
       return jsonDecode(response.body)['flavor_text_entries'][0]['flavor_text'];
     } else {
-      log(response.reasonPhrase.toString());
       // Return empty object
       return '';
     }
@@ -139,7 +130,6 @@ class APIService {
       return jsonDecode(response.body)['effect_entries'].firstWhere(
           (element) => element['language']['name'] == 'en')['short_effect'];
     } else {
-      log(response.reasonPhrase.toString());
       // Return empty object
       return '';
     }
@@ -183,7 +173,6 @@ class APIService {
       evolutionChainID =
           jsonDecode(response.body)['evolution_chain']['url'].split('/')[6];
     } else {
-      log(response.reasonPhrase.toString());
       return PokemonEvolutionModel();
     }
     // GET EVOLUTION CHAIN FROM EVOLUTION CHAIN ID
@@ -197,7 +186,6 @@ class APIService {
           jsonDecode(evolutionResponse.body)['chain']);
       return model;
     } else {
-      log(evolutionResponse.reasonPhrase.toString());
       return PokemonEvolutionModel();
     }
   }

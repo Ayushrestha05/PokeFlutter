@@ -80,8 +80,6 @@ class StatIndicator extends StatelessWidget {
           Expanded(
               flex: 3,
               child: LayoutBuilder(builder: (context, constraints) {
-                log('Value : ${(double.parse(stat.baseStat) / maxValue)}');
-                log('Max Width : ${constraints.maxWidth}');
                 double value = (double.parse(stat.baseStat) / maxValue);
                 return Stack(
                   alignment: Alignment.centerLeft,

@@ -3,7 +3,8 @@ import 'package:lottie/lottie.dart';
 
 class PokeErrorWidget extends StatelessWidget {
   final Color? color;
-  const PokeErrorWidget({super.key, this.color});
+  final String? message;
+  const PokeErrorWidget({super.key, this.color, this.message});
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +17,14 @@ class PokeErrorWidget extends StatelessWidget {
             height: 100,
             width: 100,
           ),
-          Text('Seems like this data wants to hide inside this pokeball',
-              textAlign: TextAlign.center, style: TextStyle(color: color)),
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+              message ??
+                  'Seems like this data wants to hide inside this pokeball',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: color)),
         ],
       ),
     );

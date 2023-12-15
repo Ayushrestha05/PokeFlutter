@@ -12,25 +12,31 @@ class PokeDetailStatsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //Get the largest stat value or 255 if there is no detail
-    int maxValue = detail != null
+    int maxValue = (detail != null && detail!.stats.isNotEmpty)
         ? detail!.stats
             .map((e) => int.parse(e.baseStat))
             .reduce((a, b) => a > b ? a : b)
         : 255;
     return detail != null
-        ? SingleChildScrollView(
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Column(children: [
-                ...detail!.stats
-                    .map((e) => StatIndicator(
-                          stat: e,
-                          maxValue: maxValue,
-                        ))
-                    .toList(),
-              ]),
-            ),
-          )
+        ? detail!.stats.isNotEmpty
+            ? SingleChildScrollView(
+                child: Container(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Column(children: [
+                    ...detail!.stats
+                        .map((e) => StatIndicator(
+                              stat: e,
+                              maxValue: maxValue,
+                            ))
+                        .toList(),
+                  ]),
+                ),
+              )
+            : PokeErrorWidget(
+                message: 'No Stats were found for the PKmN',
+                color: Colors.black,
+              )
         : const PokeErrorWidget();
   }
 }

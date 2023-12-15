@@ -19,36 +19,43 @@ class PokeSpriteView extends StatelessWidget {
     }
 
     return detail != null
-        ? Column(
-            children: [
-              CarouselSlider.builder(
-                  itemCount: filteredMap.length,
-                  itemBuilder: (context, index, realIndex) {
-                    final key = filteredMap.keys.elementAt(index);
-                    return Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        CachedNetworkImage(
-                            imageUrl: filteredMap[key],
-                            height: 150,
-                            width: 150,
-                            fit: BoxFit.cover,
-                            errorWidget: (context, url, error) =>
-                                const Icon(Icons.error),
-                            placeholder: (context, url) => const PokeLoadWidget()),
-                        Text(
-                          key.toString().capitalize().replaceAll('_', ' '),
-                          style: const TextStyle(color: Colors.black),
-                        )
-                      ],
-                    );
-                  },
-                  options: CarouselOptions(
-                    autoPlay: true,
-                    autoPlayAnimationDuration: const Duration(milliseconds: 500),
-                  ))
-            ],
-          )
+        ? filteredMap.isNotEmpty
+            ? Column(
+                children: [
+                  CarouselSlider.builder(
+                      itemCount: filteredMap.length,
+                      itemBuilder: (context, index, realIndex) {
+                        final key = filteredMap.keys.elementAt(index);
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            CachedNetworkImage(
+                                imageUrl: filteredMap[key],
+                                height: 150,
+                                width: 150,
+                                fit: BoxFit.cover,
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
+                                placeholder: (context, url) =>
+                                    const PokeLoadWidget()),
+                            Text(
+                              key.toString().capitalize().replaceAll('_', ' '),
+                              style: const TextStyle(color: Colors.black),
+                            )
+                          ],
+                        );
+                      },
+                      options: CarouselOptions(
+                        autoPlay: true,
+                        autoPlayAnimationDuration:
+                            const Duration(milliseconds: 500),
+                      ))
+                ],
+              )
+            : const PokeErrorWidget(
+                message: 'No Sprites were found for the PKmN',
+                color: Colors.black,
+              )
         : const PokeErrorWidget();
   }
 }

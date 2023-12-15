@@ -54,7 +54,8 @@ class PokeAboutView extends StatelessWidget {
                         'Height',
                         style: TextStyle(color: Colors.black),
                       ),
-                      Text('${(int.parse(detail!.height) / 10)} m tall',
+                      Text(
+                          '${(detail!.height.isNotEmpty) ? (int.parse(detail!.height) / 10) : 'N/A'} m tall',
                           style: const TextStyle(color: Colors.black)),
                     ],
                   ),
@@ -66,7 +67,8 @@ class PokeAboutView extends StatelessWidget {
                         'Weight',
                         style: TextStyle(color: Colors.black),
                       ),
-                      Text('${(int.parse(detail!.weight) / 10)} kg',
+                      Text(
+                          '${(detail!.weight.isNotEmpty) ? (int.parse(detail!.weight) / 10) : 'N/A'} kg',
                           style: const TextStyle(color: Colors.black)),
                     ],
                   ),
@@ -75,6 +77,8 @@ class PokeAboutView extends StatelessWidget {
               ),
             ),
           )
-        : const PokeErrorWidget();
+        : const PokeErrorWidget(
+            color: Colors.black,
+          );
   }
 }

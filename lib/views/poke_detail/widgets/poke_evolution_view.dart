@@ -20,38 +20,43 @@ class PokeEvolutionView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return detail != null
-        ? SingleChildScrollView(
-            child: Consumer(builder: (context, ref, child) {
-              final apiProvider = ref.read(apiNotifierProvider);
-              return FutureBuilder(
-                  future: apiProvider
-                      .getPokeEvolution(detail!.species['url'].split('/')[6]),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      if (snapshot.hasData) {
-                        List<Widget> evolutionWidget =
-                            addEvolutions(evolution: snapshot.data!);
+        ? detail!.species.isNotEmpty
+            ? SingleChildScrollView(
+                child: Consumer(builder: (context, ref, child) {
+                  final apiProvider = ref.read(apiNotifierProvider);
+                  return FutureBuilder(
+                      future: apiProvider.getPokeEvolution(
+                          detail!.species['url'].split('/')[6]),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          if (snapshot.hasData) {
+                            List<Widget> evolutionWidget =
+                                addEvolutions(evolution: snapshot.data!);
 
-                        return SingleChildScrollView(
-                          child: Container(
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 16),
-                              child: Column(
-                                children: evolutionWidget,
-                              )),
-                        );
-                      } else {
-                        return const SizedBox();
-                      }
-                    } else if (snapshot.connectionState ==
-                        ConnectionState.waiting) {
-                      return const PokeLoadWidget();
-                    } else {
-                      return const SizedBox();
-                    }
-                  });
-            }),
-          )
+                            return SingleChildScrollView(
+                              child: Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 16),
+                                  child: Column(
+                                    children: evolutionWidget,
+                                  )),
+                            );
+                          } else {
+                            return const SizedBox();
+                          }
+                        } else if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const PokeLoadWidget();
+                        } else {
+                          return const SizedBox();
+                        }
+                      });
+                }),
+              )
+            : const PokeErrorWidget(
+                message: 'No Evolution Data was found for the PKmN',
+                color: Colors.black,
+              )
         : const PokeErrorWidget();
   }
 

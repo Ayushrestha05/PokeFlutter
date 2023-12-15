@@ -8,6 +8,7 @@ import 'package:poke_flutter/views/poke_detail/poke_detail_notifier.dart';
 import 'package:poke_flutter/views/poke_detail/poke_detail_state.dart';
 import 'package:poke_flutter/views/poke_detail/widgets/poke_ability_view.dart';
 import 'package:poke_flutter/views/poke_detail/widgets/poke_about_view.dart';
+import 'package:poke_flutter/views/poke_detail/widgets/poke_evolution_view.dart';
 import 'package:poke_flutter/views/poke_detail/widgets/poke_sprite_view.dart';
 import 'package:poke_flutter/views/poke_detail/widgets/poke_stats_view.dart';
 import 'package:poke_flutter/widgets/poke_type_widget.dart';
@@ -83,7 +84,7 @@ class _PokeDetailViewState extends ConsumerState<PokeDetailView> {
             // More info container
             Expanded(
                 child: DefaultTabController(
-              length: 4,
+              length: 5,
               child: Container(
                 color: Colors.white,
                 child: Column(
@@ -103,6 +104,9 @@ class _PokeDetailViewState extends ConsumerState<PokeDetailView> {
                         Tab(
                           text: 'Abilities',
                         ),
+                        Tab(
+                          text: 'Evolution',
+                        )
                       ],
                       indicator: BoxDecoration(
                         border: Border(
@@ -128,6 +132,9 @@ class _PokeDetailViewState extends ConsumerState<PokeDetailView> {
                         detail: pokeDetail.detail,
                       ),
                       PokeAbilityView(
+                        detail: pokeDetail.detail,
+                      ),
+                      PokeEvolutionView(
                         detail: pokeDetail.detail,
                       )
                     ])),

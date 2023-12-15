@@ -10,6 +10,7 @@ class PokeDetailModel {
   final Map sprites;
   final List stats;
   final List types;
+  final Map species;
 
   PokeDetailModel(
       {required this.id,
@@ -22,7 +23,8 @@ class PokeDetailModel {
       required this.forms,
       required this.sprites,
       required this.stats,
-      required this.types});
+      required this.types,
+      required this.species});
 
   factory PokeDetailModel.fromJson(Map<String, dynamic> json) {
     return PokeDetailModel(
@@ -37,6 +39,7 @@ class PokeDetailModel {
       sprites: json['sprites'],
       stats: json['stats'].map((e) => PokeStats.fromJson(e)).toList(),
       types: json['types'].map((e) => e['type']['name']).toList(),
+      species: json['species'],
     );
   }
 }

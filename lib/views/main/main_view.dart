@@ -1,6 +1,8 @@
 import 'dart:developer';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:poke_flutter/utils/constants.dart';
 import 'package:poke_flutter/utils/extensions/string_extension.dart';
 import 'package:poke_flutter/utils/services/api_services.dart';
 import 'package:poke_flutter/views/main/poke_data_state.dart';
@@ -126,12 +128,25 @@ class MyHomePage extends ConsumerWidget {
                             //TODO Add Placeholder when Error Occurs
                             Hero(
                               tag: 'pokeIMG${poke.pokemons![index].id}',
-                              child: Image.network(
-                                'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${poke.pokemons![index].id}.png',
-                                height: 100,
-                                width: 100,
-                              ),
+                              child: CachedNetworkImage(
+                                  imageUrl: getKPokeImage(
+                                      poke.pokemons![index].id.toString()),
+                                  height: 100,
+                                  width: 100,
+                                  errorWidget: (context, url, error) =>
+                                      Container(
+                                        height: 100,
+                                        width: 100,
+                                        child: Center(
+                                          child: Image.asset(
+                                            'assets/pokeball.png',
+                                            height: 60,
+                                            width: 60,
+                                          ),
+                                        ),
+                                      )),
                             ),
+
                             Text(
                               poke.pokemons![index].name.capitalize(),
                               style: const TextStyle(

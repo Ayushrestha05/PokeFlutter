@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'package:poke_flutter/models/poke_detail_model.dart';
+import 'package:poke_flutter/models/poke_evolution_model.dart';
 import 'package:poke_flutter/models/poke_model.dart';
 import 'package:poke_flutter/utils/services/api_response_cache_box.dart';
 
@@ -87,7 +88,8 @@ class APIService {
           forms: [],
           sprites: {},
           stats: [],
-          types: []);
+          types: [],
+          species: {});
     }
   }
 
@@ -139,6 +141,63 @@ class APIService {
       log(response.reasonPhrase.toString());
       // Return empty object
       return '';
+    }
+  }
+
+  Future<PokemonEvolutionModel> getPokeEvolution(String id) async {
+    final box = await Hive.openBox('apiResponses');
+    //first retrieve the evolution chain from the pokemon species
+    final cachedSpeciesResponse = box.values.firstWhere(
+      (response) => response!.url == '${endpoint}pokemon-species/$id',
+      orElse: () => null,
+    );
+    if (cachedSpeciesResponse != null &&
+        ((DateTime.now().millisecondsSinceEpoch -
+                cachedSpeciesResponse.timestamp) <
+            _cacheTimeout)) {
+      String evolutionChainID =
+          jsonDecode(cachedSpeciesResponse.response)['evolution_chain']['url']
+              .split('/')[6];
+      //then retrieve the evolution chain from the pokemon species
+      final cachedEvolutionResponse = box.values.firstWhere(
+        (response) =>
+            response!.url == '${endpoint}evolution-chain/$evolutionChainID',
+        orElse: () => null,
+      );
+      if (cachedEvolutionResponse != null &&
+          ((DateTime.now().millisecondsSinceEpoch -
+                  cachedEvolutionResponse.timestamp) <
+              _cacheTimeout)) {
+        return PokemonEvolutionModel.fromJson(
+            jsonDecode(cachedEvolutionResponse.response)['chain']);
+      }
+    }
+
+    // GET EVOLUTION CHAIN ID FROM POKEMON SPECIES
+    String evolutionChainID = '1';
+    var response = await http.get(Uri.parse('${endpoint}pokemon-species/$id'));
+    if (response.statusCode == 200) {
+      saveAPICacheData(
+          endpoint: '${endpoint}pokemon-species/$id', response: response);
+      evolutionChainID =
+          jsonDecode(response.body)['evolution_chain']['url'].split('/')[6];
+    } else {
+      log(response.reasonPhrase.toString());
+      return PokemonEvolutionModel();
+    }
+    // GET EVOLUTION CHAIN FROM EVOLUTION CHAIN ID
+    var evolutionResponse = await http
+        .get(Uri.parse('${endpoint}evolution-chain/$evolutionChainID'));
+    if (evolutionResponse.statusCode == 200) {
+      saveAPICacheData(
+          endpoint: '${endpoint}evolution-chain/$id',
+          response: evolutionResponse);
+      PokemonEvolutionModel model = PokemonEvolutionModel.fromJson(
+          jsonDecode(evolutionResponse.body)['chain']);
+      return model;
+    } else {
+      log(evolutionResponse.reasonPhrase.toString());
+      return PokemonEvolutionModel();
     }
   }
 

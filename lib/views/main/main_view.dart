@@ -72,7 +72,6 @@ class MyHomePage extends ConsumerWidget {
                         ref
                             .watch(pokeDetailNotifierProvider.notifier)
                             .getPokeDetailData(id: selectedPokeID);
-                        log('Provider Update Completed');
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
                           return PokeDetailView(

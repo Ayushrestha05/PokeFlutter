@@ -31,10 +31,12 @@ class PokeNotifier extends Notifier<PokeDataState> {
   }
 
   void filterPokeData(String query) async {
-    log('Query: $query');
     if (query.isNotEmpty) {
+      //Search can be done by name or PokeID
       final List<PokeModel> pokeData = pokeDataInit
-          .where((poke) => poke.name.toLowerCase().contains(query))
+          .where((poke) =>
+              poke.name.toLowerCase().contains(query) ||
+              poke.id.toString().contains(query))
           .toList();
       state = PokeDataState(status: PokeDataStatus.loaded, pokemons: pokeData);
     } else {

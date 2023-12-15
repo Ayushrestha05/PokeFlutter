@@ -2,7 +2,9 @@ import 'dart:developer';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poke_flutter/models/poke_detail_model.dart';
+import 'package:poke_flutter/utils/services/api_notifier.dart';
 import 'package:poke_flutter/utils/services/api_services.dart';
 
 class PokeAboutView extends StatelessWidget {
@@ -16,28 +18,33 @@ class PokeAboutView extends StatelessWidget {
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Column(
               children: [
-                FutureBuilder(
-                    future:
-                        APIService().getPokeFlavorText(int.parse(detail!.id)),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        if ((snapshot.data ?? '').isNotEmpty) {
-                          return AnimatedTextKit(
-                            animatedTexts: [
-                              TypewriterAnimatedText(
-                                snapshot.data.toString().replaceAll('\n', ' '),
-                                textStyle: TextStyle(color: Colors.black),
-                              )
-                            ],
-                            isRepeatingAnimation: false,
-                          );
+                Consumer(builder: (context, ref, child) {
+                  final apiProvider = ref.read(apiNotifierProvider);
+                  return FutureBuilder(
+                      future:
+                          apiProvider.getPokeFlavorText(int.parse(detail!.id)),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          if ((snapshot.data ?? '').isNotEmpty) {
+                            return AnimatedTextKit(
+                              animatedTexts: [
+                                TypewriterAnimatedText(
+                                  snapshot.data
+                                      .toString()
+                                      .replaceAll('\n', ' '),
+                                  textStyle: TextStyle(color: Colors.black),
+                                )
+                              ],
+                              isRepeatingAnimation: false,
+                            );
+                          } else {
+                            return const SizedBox();
+                          }
                         } else {
                           return const SizedBox();
                         }
-                      } else {
-                        return const SizedBox();
-                      }
-                    }),
+                      });
+                }),
                 const Divider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -7,6 +7,7 @@ import 'package:poke_flutter/utils/services/api_response_cache_box.dart';
 import 'package:poke_flutter/views/main/main_view.dart';
 
 void main() async {
+  // Ensures that the Flutter Widgets library is initialized before any plugins.
   WidgetsFlutterBinding.ensureInitialized();
 
   //Setting up Hive Box
@@ -26,17 +27,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'User Data',
+      title: 'PokeFlutter',
       theme: ThemeData(
         scaffoldBackgroundColor: kPrimaryColor,
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         fontFamily: 'PKMN',
-        textTheme: TextTheme(
+        textTheme: const TextTheme(
           bodyMedium: TextStyle(color: Colors.white),
         ),
       ),
-      home: MyHomePage(),
+      home: const MyHomePage(),
     );
   }
 }

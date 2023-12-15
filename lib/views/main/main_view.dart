@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poke_flutter/utils/constants.dart';
 import 'package:poke_flutter/utils/extensions/string_extension.dart';
+import 'package:poke_flutter/utils/services/api_notifier.dart';
 import 'package:poke_flutter/utils/services/api_services.dart';
 import 'package:poke_flutter/views/main/poke_data_state.dart';
 import 'package:poke_flutter/views/main/poke_notifier.dart';
@@ -17,6 +18,7 @@ class MyHomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final poke = ref.watch(pokeNotifierProvider);
+    final apiProvider = ref.read(apiNotifierProvider);
     return Scaffold(
         body: SafeArea(
       child: CustomScrollView(
@@ -100,7 +102,7 @@ class MyHomePage extends ConsumerWidget {
                                   // I have to call the API again to get the types
                                   // TODO : Find a better way to do this
                                   FutureBuilder(
-                                      future: APIService().getPokemonDetail(
+                                      future: apiProvider.getPokemonDetail(
                                           poke.pokemons![index].id),
                                       builder: (context, snapshot) {
                                         switch (snapshot.connectionState) {

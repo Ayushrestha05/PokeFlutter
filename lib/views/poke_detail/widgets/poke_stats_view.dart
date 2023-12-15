@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:poke_flutter/models/poke_detail_model.dart';
 import 'package:poke_flutter/utils/constants.dart';
+import 'package:poke_flutter/widgets/error_widget.dart';
 
 class PokeDetailStatsView extends StatelessWidget {
   final PokeDetailModel? detail;
@@ -17,18 +18,20 @@ class PokeDetailStatsView extends StatelessWidget {
             .reduce((a, b) => a > b ? a : b)
         : 255;
     return detail != null
-        ? Container(
-            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Column(children: [
-              ...detail!.stats
-                  .map((e) => StatIndicator(
-                        stat: e,
-                        maxValue: maxValue,
-                      ))
-                  .toList(),
-            ]),
+        ? SingleChildScrollView(
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Column(children: [
+                ...detail!.stats
+                    .map((e) => StatIndicator(
+                          stat: e,
+                          maxValue: maxValue,
+                        ))
+                    .toList(),
+              ]),
+            ),
           )
-        : Container();
+        : const PokeErrorWidget();
   }
 }
 
@@ -60,7 +63,7 @@ class StatIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 8),
+      margin: const EdgeInsets.only(bottom: 8),
       child: Row(
         children: [
           Expanded(

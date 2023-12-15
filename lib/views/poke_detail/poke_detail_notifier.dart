@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poke_flutter/models/poke_detail_model.dart';

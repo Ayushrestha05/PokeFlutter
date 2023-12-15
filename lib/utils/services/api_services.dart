@@ -10,7 +10,8 @@ import 'package:poke_flutter/utils/services/api_response_cache_box.dart';
 
 class APIService {
   String endpoint = 'https://pokeapi.co/api/v2/';
-  static int _cacheTimeout = Duration(hours: 1).inMilliseconds; // 1 hour
+  static final int _cacheTimeout =
+      const Duration(hours: 1).inMilliseconds; // 1 hour
 
   Future<List<PokeModel>> getAllPokemon() async {
     final box = await Hive.openBox('apiResponses');
@@ -210,8 +211,9 @@ class APIService {
       ..response = response.body
       ..timestamp = DateTime.now().millisecondsSinceEpoch;
     //Remove Existing Cache Data and Add New Cache Data
-    await box.values.where((response) => response!.url == endpoint)
-      ..forEach((response) => response.delete());
+    box.values
+        .where((response) => response!.url == endpoint)
+        .forEach((response) => response.delete());
     await box.add(newResponse);
   }
 }

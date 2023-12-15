@@ -5,11 +5,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poke_flutter/utils/constants.dart';
 import 'package:poke_flutter/utils/extensions/string_extension.dart';
 import 'package:poke_flutter/utils/services/api_notifier.dart';
-import 'package:poke_flutter/utils/services/api_services.dart';
 import 'package:poke_flutter/views/main/poke_data_state.dart';
 import 'package:poke_flutter/views/main/poke_notifier.dart';
 import 'package:poke_flutter/views/poke_detail/poke_detail_notifier.dart';
 import 'package:poke_flutter/views/poke_detail/poke_detail_view.dart';
+import 'package:poke_flutter/widgets/error_widget.dart';
 import 'package:poke_flutter/widgets/poke_type_widget.dart';
 
 class MyHomePage extends ConsumerWidget {
@@ -26,7 +26,7 @@ class MyHomePage extends ConsumerWidget {
           SliverPadding(
             padding: const EdgeInsets.all(16.0),
             sliver: SliverAppBar(
-              backgroundColor: Color(0xFFebf3f5),
+              backgroundColor: const Color(0xFFebf3f5),
               snap: true,
               floating: true,
               shape: const RoundedRectangleBorder(
@@ -54,7 +54,7 @@ class MyHomePage extends ConsumerWidget {
             const SliverToBoxAdapter(
                 child: Center(child: CircularProgressIndicator())),
           ] else if (poke.status == PokeDataStatus.error) ...[
-            Center(child: Text(poke.error!))
+            const PokeErrorWidget()
           ] else ...[
             SliverPadding(
               padding: const EdgeInsets.fromLTRB(16.0, 0, 16, 16),
@@ -69,8 +69,9 @@ class MyHomePage extends ConsumerWidget {
                       onTap: () async {
                         final int selectedPokeID = poke.pokemons![index].id;
 
-                        await ref.watch(pokeDetailNotifierProvider.notifier)
-                          ..getPokeDetailData(id: selectedPokeID);
+                        ref
+                            .watch(pokeDetailNotifierProvider.notifier)
+                            .getPokeDetailData(id: selectedPokeID);
                         log('Provider Update Completed');
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
@@ -95,7 +96,7 @@ class MyHomePage extends ConsumerWidget {
                                       child: Text(
                                         '#${poke.pokemons![index].id}',
                                       )),
-                                  Spacer(),
+                                  const Spacer(),
                                   // Unsure about how to show the types
                                   // Its a sphagetti method to get the types
                                   // Since Search is used to find pokemon and the initial list doesn't contain pokemon types
@@ -110,7 +111,7 @@ class MyHomePage extends ConsumerWidget {
                                             if (snapshot.hasData) {
                                               return Wrap(
                                                 spacing: 3,
-                                                children: snapshot.data!.types!
+                                                children: snapshot.data!.types
                                                     .map<Widget>((e) =>
                                                         pokeTypeWidget(
                                                             type: e,
@@ -118,37 +119,35 @@ class MyHomePage extends ConsumerWidget {
                                                     .toList(),
                                               );
                                             } else {
-                                              return SizedBox();
+                                              return const SizedBox();
                                             }
                                           default:
-                                            return SizedBox();
+                                            return const SizedBox();
                                         }
                                       })
                                 ],
                               ),
                             ),
-                            //TODO Add Placeholder when Error Occurs
                             Hero(
                               tag: 'pokeIMG${poke.pokemons![index].id}',
                               child: CachedNetworkImage(
-                                  imageUrl: getKPokeImage(
-                                      poke.pokemons![index].id.toString()),
+                                imageUrl: getKPokeImage(
+                                    poke.pokemons![index].id.toString()),
+                                height: 100,
+                                width: 100,
+                                errorWidget: (context, url, error) => SizedBox(
                                   height: 100,
                                   width: 100,
-                                  errorWidget: (context, url, error) =>
-                                      Container(
-                                        height: 100,
-                                        width: 100,
-                                        child: Center(
-                                          child: Image.asset(
-                                            'assets/pokeball.png',
-                                            height: 60,
-                                            width: 60,
-                                          ),
-                                        ),
-                                      )),
+                                  child: Center(
+                                    child: Image.asset(
+                                      'assets/pokeball.png',
+                                      height: 60,
+                                      width: 60,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
-
                             Text(
                               poke.pokemons![index].name.capitalize(),
                               style: const TextStyle(

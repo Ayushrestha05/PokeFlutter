@@ -1,11 +1,10 @@
-import 'dart:developer';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:poke_flutter/utils/constants.dart';
 import 'package:poke_flutter/utils/extensions/string_extension.dart';
 import 'package:poke_flutter/models/poke_model.dart';
 import 'package:poke_flutter/views/poke_detail/poke_detail_notifier.dart';
-import 'package:poke_flutter/views/poke_detail/poke_detail_state.dart';
 import 'package:poke_flutter/views/poke_detail/widgets/poke_ability_view.dart';
 import 'package:poke_flutter/views/poke_detail/widgets/poke_about_view.dart';
 import 'package:poke_flutter/views/poke_detail/widgets/poke_evolution_view.dart';
@@ -31,7 +30,6 @@ class _PokeDetailViewState extends ConsumerState<PokeDetailView> {
   @override
   Widget build(BuildContext context) {
     final pokeDetail = ref.watch(pokeDetailNotifierProvider);
-    log('${pokeDetail.detail!.name}');
     return Scaffold(
       body: SafeArea(
           child: Center(
@@ -39,7 +37,7 @@ class _PokeDetailViewState extends ConsumerState<PokeDetailView> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              margin: EdgeInsets.fromLTRB(16, 16, 16, 0),
+              margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
               child: Column(
                 children: [
                   Align(
@@ -50,15 +48,26 @@ class _PokeDetailViewState extends ConsumerState<PokeDetailView> {
                   ),
                   Hero(
                     tag: 'pokeIMG${widget.pokemon.id}',
-                    child: Image.network(
-                      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${widget.pokemon.id}.png',
-                      // height: 100,
-                      // width: 100,
-                    ),
+                    child: CachedNetworkImage(
+                        imageUrl: getKPokeImage(widget.pokemon.id.toString()),
+                        height: 100,
+                        width: 100,
+                        errorWidget: (context, url, error) => SizedBox(
+                              height: 100,
+                              width: 100,
+                              child: Center(
+                                child: Image.asset(
+                                  'assets/pokeball.png',
+                                  height: 60,
+                                  width: 60,
+                                ),
+                              ),
+                            )),
                   ),
                   Text(
                     widget.pokemon.name.capitalize(),
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(
                     height: 10,
@@ -89,7 +98,7 @@ class _PokeDetailViewState extends ConsumerState<PokeDetailView> {
                 color: Colors.white,
                 child: Column(
                   children: [
-                    TabBar(
+                    const TabBar(
                       isScrollable: true,
                       tabs: [
                         Tab(
